@@ -10,8 +10,8 @@ using Serilog;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-using TinyUrl.WebApi;
 using TinyUrl.WebApi.Config;
+using TinyUrl.WebApi.Data;
 using TinyUrl.WebApi.Repositories;
 using TinyUrl.WebApi.Services;
 
@@ -26,111 +26,111 @@ ConfigureApplication(builder.Build());
 
 void ConfigureServices(IServiceCollection services)
 {
-  string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
-  services.AddDbContext<UrlContext>(options => options.UseSqlServer(connection));
-  services.AddScoped<IUrlRepository, UrlRepository>();
-  services.AddScoped<IUrlService, UrlService>();
+	string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
+	services.AddDbContext<UrlContext>(options => options.UseSqlServer(connection));
+	services.AddScoped<IUrlRepository, UrlRepository>();
+	services.AddScoped<IUrlService, UrlService>();
 
-  // Add services to the container.
-  services.AddControllers();
+	// Add services to the container.
+	services.AddControllers();
 
-  // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-  services.AddEndpointsApiExplorer();
-  services.AddMvcCore().AddJsonOptions(options => { options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); }).AddApiExplorer();
+	// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+	services.AddEndpointsApiExplorer();
+	services.AddMvcCore().AddJsonOptions(options => { options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); }).AddApiExplorer();
 
-  AddSwaggerGen(services);
-  AddAuthentication(services);
-  AddCors(services);
-  RegisterOptions(services, builder.Configuration);
+	AddSwaggerGen(services);
+	AddAuthentication(services);
+	AddCors(services);
+	RegisterOptions(services, builder.Configuration);
 }
 
 static void AddAuthentication(IServiceCollection services)
 {
-  // Аутентификация Negotiate позволяет пробрасывать пользователя на веб-сервер под управлением Linux
-  // https://docs.microsoft.com/en-us/aspnet/core/security/authentication/windowsauth#kestrel
+	// Аутентификация Negotiate позволяет пробрасывать пользователя на веб-сервер под управлением Linux
+	// https://docs.microsoft.com/en-us/aspnet/core/security/authentication/windowsauth#kestrel
 
-  services.AddAuthentication(NegotiateDefaults.AuthenticationScheme).AddNegotiate();
-  services.AddAuthorization(options =>
-  {
-    // By default, all incoming requests will be authorized according to the default policy.
-    options.FallbackPolicy = options.DefaultPolicy;
-  });
+	services.AddAuthentication(NegotiateDefaults.AuthenticationScheme).AddNegotiate();
+	services.AddAuthorization(options =>
+	{
+		// By default, all incoming requests will be authorized according to the default policy.
+		options.FallbackPolicy = options.DefaultPolicy;
+	});
 }
 
 void AddCors(IServiceCollection services)
 {
-  // https://docs.microsoft.com/ru-ru/aspnet/core/security/cors
-  services.AddCors(options => options.AddDefaultPolicy(b => ConfigureCorsPolicy(b, builder.Configuration)));
+	// https://docs.microsoft.com/ru-ru/aspnet/core/security/cors
+	services.AddCors(options => options.AddDefaultPolicy(b => ConfigureCorsPolicy(b, builder.Configuration)));
 }
 
 void ConfigureCorsPolicy(CorsPolicyBuilder corsPolicyBuilder, IConfiguration configuration)
 {
-  string[]? origins = configuration.GetSection("AllowedOrigins").Get<string[]>();
-  if (origins?.Any() != true)
-    return;
+	string[]? origins = configuration.GetSection("AllowedOrigins").Get<string[]>();
+	if (origins?.Any() != true)
+		return;
 
-  corsPolicyBuilder.WithOrigins(origins)
-    .AllowAnyHeader()
-    .AllowAnyMethod();
+	corsPolicyBuilder.WithOrigins(origins)
+		.AllowAnyHeader()
+		.AllowAnyMethod();
 }
 
 static void RegisterOptions(IServiceCollection services, IConfiguration configuration)
 {
-  services.AddOptions<ServiceConfig>().Bind(configuration.GetSection(nameof(ServiceConfig)));
+	services.AddOptions<ServiceConfig>().Bind(configuration.GetSection(nameof(ServiceConfig)));
 }
 
 void AddSwaggerGen(IServiceCollection services)
 {
-  services.AddSwaggerGen(c =>
-  {
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-      Title = projectName,
-      Version = "v1",
-      Description = "Шаблон сервиса REST API",
-    });
-    c.SupportNonNullableReferenceTypes();
+	services.AddSwaggerGen(c =>
+	{
+		c.SwaggerDoc("v1", new OpenApiInfo
+		{
+			Title = projectName,
+			Version = "v1",
+			Description = "Шаблон сервиса REST API"
+		});
+		c.SupportNonNullableReferenceTypes();
 
-    IncludeXmlComments(c);
-  });
+		IncludeXmlComments(c);
+	});
 }
 
 void IncludeXmlComments(SwaggerGenOptions options)
 {
-  string baseDirectory = AppContext.BaseDirectory;
-  var xmlPaths = new List<string>
-  {
-    Path.Combine(baseDirectory, $"{projectName}.xml")
-  };
+	string baseDirectory = AppContext.BaseDirectory;
+	var xmlPaths = new List<string>
+	{
+		Path.Combine(baseDirectory, $"{projectName}.xml")
+	};
 
-  xmlPaths.ForEach(s =>
-  {
-    if (File.Exists(s))
-      options.IncludeXmlComments(s);
-  });
+	xmlPaths.ForEach(s =>
+	{
+		if (File.Exists(s))
+			options.IncludeXmlComments(s);
+	});
 }
 
 void ConfigureApplication(WebApplication app)
 {
-  // Configure the HTTP request pipeline.
-  if (app.Environment.IsDevelopment())
-    app.UseDeveloperExceptionPage();
+	// Configure the HTTP request pipeline.
+	if (app.Environment.IsDevelopment())
+		app.UseDeveloperExceptionPage();
 
-  app.UseExceptionHandler("/error");
+	app.UseExceptionHandler("/error");
 
-  app.UseSwagger(c => c.RouteTemplate = "swagger/{documentName}/swagger.json");
-  app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.json", $"{projectName} v1"));
+	app.UseSwagger(c => c.RouteTemplate = "swagger/{documentName}/swagger.json");
+	app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.json", $"{projectName} v1"));
 
-  app.UseSerilogRequestLogging();
+	app.UseSerilogRequestLogging();
 
-  app.UseHttpsRedirection();
-  app.UseRouting();
-  app.UseCors();
+	app.UseHttpsRedirection();
+	app.UseRouting();
+	app.UseCors();
 
-  app.UseAuthentication();
-  app.UseAuthorization();
+	app.UseAuthentication();
+	app.UseAuthorization();
 
-  app.MapControllers();
+	app.MapControllers();
 
-  app.Run();
+	app.Run();
 }

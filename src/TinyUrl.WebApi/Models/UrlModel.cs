@@ -5,12 +5,14 @@ namespace TinyUrl.WebApi.Models;
 
 public class UrlModel
 {
-  [Required]
-  public Guid Id { get; set; }
+	[Required]
+	public Guid Id { get; set; }
 
-  [Url]
-  public string FullAddress { get; set; }
+	[Url]
+	public string FullAddress { get; set; }
 
-  [Url]
-  public string ShortAddress { get; set; }
+	[Url]
+	public string ShortAddress { get; set; }
+
+	public string QrCodePath { get; set; }
 }

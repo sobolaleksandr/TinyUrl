@@ -20,17 +20,17 @@ namespace TinyUrl.WebApi.Controllers;
 [Produces(MediaTypeNames.Application.Json)]
 public class ExceptionHandlerController : ControllerBase
 {
-  [Route("/error")]
-  [ApiExplorerSettings(IgnoreApi = true)]
-  public ActionResult<RestApiError> HandleError()
-  {
-    var exceptionHandlerFeature = HttpContext.Features.Get<IExceptionHandlerFeature>()!;
+	[Route("/error")]
+	[ApiExplorerSettings(IgnoreApi = true)]
+	public ActionResult<RestApiError> HandleError()
+	{
+		var exceptionHandlerFeature = HttpContext.Features.Get<IExceptionHandlerFeature>()!;
 
-    var error = new RestApiError
-    {
-      Message = exceptionHandlerFeature.Error.Message
-    };
+		var error = new RestApiError
+		{
+			Message = exceptionHandlerFeature.Error.Message
+		};
 
-    return StatusCode(StatusCodes.Status500InternalServerError, error);
-  }
+		return StatusCode(StatusCodes.Status500InternalServerError, error);
+	}
 }

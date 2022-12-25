@@ -5,7 +5,7 @@ namespace TinyUrl.WebApi.Repositories;
 
 public interface IUrlRepository
 {
-  Task<UrlModel?> GetByUrl(string url);
+	Task<UrlModel?> GetByUrl(string url);
 
-  Task CreateUrl(UrlModel url);
+	Task CreateUrl(UrlModel url);
 }

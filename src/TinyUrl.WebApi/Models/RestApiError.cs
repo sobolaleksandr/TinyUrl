@@ -9,5 +9,5 @@ public class RestApiError
 	/// <summary>
 	/// Сообщение об ошибке.
 	/// </summary>
-  public string Message { get; init; }
+	public string Message { get; init; }
 }

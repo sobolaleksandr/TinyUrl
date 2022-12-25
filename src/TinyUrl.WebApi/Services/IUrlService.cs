@@ -5,7 +5,7 @@ namespace TinyUrl.WebApi.Services;
 
 public interface IUrlService
 {
-  Task<UrlModel> CreateUrl(string url);
+	Task<UrlModel> CreateUrl(string url);
 
-  Task<UrlModel?> GetByUrl(string url);
+	Task<UrlModel?> GetByUrl(string url);
 }
