@@ -21,7 +21,6 @@ public class UrlService : IUrlService
 		_urlRepository = urlRepository;
 		_appEnvironment = appEnvironment;
 		_config = options.Value;
-		License.LicenseKey = "IRONBARCODE.U3AYASAN.5144-E989DDF446-B25XIO4JLZRIYB6-TOTV57ZAFRYS-PQZYOF7NMXAG-4H4KRO5QWKZN-LZ6ZZ74XK6XB-LZZQ5K-T7ZCE43GKPSIUA-DEPLOYMENT.TRIAL-OTIOZG.TRIAL.EXPIRES.24.JAN.2023";
 	}
 
 	public async Task<UrlModel> CreateUrl(string url)
@@ -38,7 +37,7 @@ public class UrlService : IUrlService
 	{
 		GeneratedBarcode qrCode = QRCodeWriter.CreateQrCode(url);
 		string imagePath = @$"{_appEnvironment.WebRootPath}\Images\{url}.jpeg";
-		qrCode.SaveAsImage(imagePath);
+		qrCode.SaveAsJpeg(imagePath);
 
 		return imagePath;
 	}
