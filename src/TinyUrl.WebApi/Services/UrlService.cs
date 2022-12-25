@@ -33,10 +33,10 @@ public class UrlService : IUrlService
 
 	public async Task<UrlModel?> GetByUrl(string url) => await _urlRepository.GetByUrl(url);
 
-	private string CreateQrCode(string url)
+	private string CreateQrCode(string shortUrl, string randomString)
 	{
-		GeneratedBarcode qrCode = QRCodeWriter.CreateQrCode(url);
-		string imagePath = @$"{_appEnvironment.WebRootPath}\Images\{url}.jpeg";
+		GeneratedBarcode qrCode = QRCodeWriter.CreateQrCode(shortUrl);
+		string imagePath = @$"{_appEnvironment.WebRootPath}\Images\{randomString}.jpeg";
 		qrCode.SaveAsJpeg(imagePath);
 
 		return imagePath;
@@ -54,7 +54,7 @@ public class UrlService : IUrlService
 				{
 					FullAddress = fullUrl,
 					ShortAddress = shortUrl,
-					QrCodePath = CreateQrCode(randomString)
+					QrCodePath = CreateQrCode(shortUrl, randomString)
 				};
 		}
 	}
