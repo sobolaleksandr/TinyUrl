@@ -9,10 +9,9 @@
 /// </summary>
 public class ServiceConfig
 {
-	/// <summary>
-	/// Пример поля, получаемого из настроек.
-	/// </summary>
 	public string ServerUrl { get; set; }
 
 	public int UrlLength { get; set; }
+
+	public string ImagesFolderPath { get; set; }
 }
