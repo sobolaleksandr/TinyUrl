@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 
 using TinyUrl.WebApi.Models;
 using TinyUrl.WebApi.Services;
@@ -32,7 +33,7 @@ public class UrlController : ControllerBase
 	[ProducesResponseType(typeof(RestApiError), StatusCodes.Status500InternalServerError)]
 	public async Task<ActionResult<string>> GetFullUrl(string shortUrl)
 	{
-		UrlModel? url = await _urlService.GetByUrl(shortUrl);
+		UrlModel? url = await _urlService.GetByShortUrl(shortUrl);
 		if (url == null)
 		{
 			var notFoundError = new RestApiError
@@ -71,7 +72,7 @@ public class UrlController : ControllerBase
 			return BadRequest(validationError);
 		}
 
-		UrlModel? url = await _urlService.GetByUrl(fullUrl);
+		UrlModel? url = await _urlService.GetByFullUrl(fullUrl);
 		if (url != null)
 			return Ok(url);
 

@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using System.Text.Json.Serialization;
 
-using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -39,22 +38,8 @@ void ConfigureServices(IServiceCollection services)
 	services.AddMvcCore().AddJsonOptions(options => { options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); }).AddApiExplorer();
 
 	AddSwaggerGen(services);
-	AddAuthentication(services);
 	AddCors(services);
 	RegisterOptions(services, builder.Configuration);
-}
-
-static void AddAuthentication(IServiceCollection services)
-{
-	// Аутентификация Negotiate позволяет пробрасывать пользователя на веб-сервер под управлением Linux
-	// https://docs.microsoft.com/en-us/aspnet/core/security/authentication/windowsauth#kestrel
-
-	services.AddAuthentication(NegotiateDefaults.AuthenticationScheme).AddNegotiate();
-	services.AddAuthorization(options =>
-	{
-		// By default, all incoming requests will be authorized according to the default policy.
-		options.FallbackPolicy = options.DefaultPolicy;
-	});
 }
 
 void AddCors(IServiceCollection services)
@@ -127,7 +112,6 @@ void ConfigureApplication(WebApplication app)
 	app.UseRouting();
 	app.UseCors();
 
-	app.UseAuthentication();
 	app.UseAuthorization();
 
 	app.MapControllers();

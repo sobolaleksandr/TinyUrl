@@ -7,5 +7,7 @@ public interface IUrlService
 {
 	Task<UrlModel> CreateUrl(string url);
 
-	Task<UrlModel?> GetByUrl(string url);
+	Task<UrlModel?> GetByFullUrl(string url);
+
+	Task<UrlModel?> GetByShortUrl(string url);
 }

@@ -12,10 +12,9 @@ public class UrlRepository : IUrlRepository
 
 	public UrlRepository(UrlContext context) => _context = context;
 
-	public async Task<UrlModel?> GetByUrl(string url)
-	{
-		return await _context.Urls.FirstOrDefaultAsync(x => x.ShortAddress == url);
-	}
+	public async Task<UrlModel?> GetByFullUrl(string url) => await _context.Urls.FirstOrDefaultAsync(x => x.FullAddress == url);
+
+	public async Task<UrlModel?> GetByShortUrl(string url) => await _context.Urls.FirstOrDefaultAsync(x => x.ShortAddress == url);
 
 	public async Task CreateUrl(UrlModel url)
 	{

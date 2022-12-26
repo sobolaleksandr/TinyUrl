@@ -31,7 +31,9 @@ public class UrlService : IUrlService
 		return newUrl;
 	}
 
-	public async Task<UrlModel?> GetByUrl(string url) => await _urlRepository.GetByUrl(url);
+	public async Task<UrlModel?> GetByFullUrl(string url) => await _urlRepository.GetByFullUrl(url);
+
+	public async Task<UrlModel?> GetByShortUrl(string url) => await _urlRepository.GetByShortUrl(url);
 
 	private string CreateQrCode(string shortUrl, string randomString)
 	{
@@ -48,7 +50,7 @@ public class UrlService : IUrlService
 		{
 			string randomString = RandomString(_config.UrlLength);
 			string shortUrl = $"{_config.ServerUrl}?u={randomString}";
-			UrlModel? url = await _urlRepository.GetByUrl(shortUrl);
+			UrlModel? url = await _urlRepository.GetByFullUrl(shortUrl);
 			if (url == null)
 				return new UrlModel
 				{
