@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 using TinyUrl.WebApi.Models;
 using TinyUrl.WebApi.Services;
@@ -44,7 +43,7 @@ public class UrlController : ControllerBase
 			return NotFound(notFoundError);
 		}
 
-		_logger.LogInformation("Объект успешно получен: {@fullUrl}", url);
+		_logger.LogInformation("Объект успешно получен: {@url}", url);
 
 		return Redirect(url.FullAddress);
 	}
@@ -74,9 +73,14 @@ public class UrlController : ControllerBase
 
 		UrlModel? url = await _urlService.GetByFullUrl(fullUrl);
 		if (url != null)
+		{
+			_logger.LogInformation("Объект повторно использован: {@url}", url);
+
 			return Ok(url);
+		}
 
 		UrlModel newUrl = await _urlService.CreateUrl(fullUrl);
+		_logger.LogInformation("Объект успешно создан: {@url}", newUrl);
 
 		return Ok(newUrl);
 	}

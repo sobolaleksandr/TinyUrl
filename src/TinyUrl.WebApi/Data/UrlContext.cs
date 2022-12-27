@@ -7,8 +7,7 @@ namespace TinyUrl.WebApi.Data;
 
 public sealed class UrlContext : DbContext
 {
-	public UrlContext(DbContextOptions<UrlContext> options)
-		: base(options)
+	public UrlContext(DbContextOptions<UrlContext> options) : base(options)
 	{
 		Database.EnsureCreated();
 	}

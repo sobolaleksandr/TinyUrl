@@ -44,7 +44,7 @@ function TinyUrlForm() {
                     <a href={`/${shortUrl?.shortAddress}`}>
                         {window.location.origin}/{shortUrl?.shortAddress}
                     </a>
-                    <img src={process.env.PUBLIC_URL + qrCodePath} />
+                    <img src={process.env.PUBLIC_URL + qrCodePath} alt="QR-код"/>
                 </div>
             )}
         </Box>

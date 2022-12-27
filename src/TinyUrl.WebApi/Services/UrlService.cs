@@ -12,14 +12,12 @@ namespace TinyUrl.WebApi.Services;
 public class UrlService : IUrlService
 {
 	private static readonly Random _random = new();
-	private readonly IWebHostEnvironment _appEnvironment;
 	private readonly ServiceConfig _config;
 	private readonly IUrlRepository _urlRepository;
 
-	public UrlService(IOptions<ServiceConfig> options, IUrlRepository urlRepository, IWebHostEnvironment appEnvironment)
+	public UrlService(IOptions<ServiceConfig> options, IUrlRepository urlRepository)
 	{
 		_urlRepository = urlRepository;
-		_appEnvironment = appEnvironment;
 		_config = options.Value;
 	}
 
