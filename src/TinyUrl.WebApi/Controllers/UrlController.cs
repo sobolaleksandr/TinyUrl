@@ -23,11 +23,11 @@ public class UrlController : ControllerBase
 	/// Поиск ссылки по токену и редирект.
 	/// </summary>
 	/// <param name="shortUrl">Токен.</param>
-	/// <response code="302">Объект найден в базе данных.</response>
+	/// <response code="200">Объект найден в базе данных.</response>
 	/// <response code="404">Объект отсутствует в базе данных.</response>
 	/// <response code="500">Произошло исключение при получении объекта.</response>
 	[HttpGet]
-	[ProducesResponseType(typeof(UrlModel), StatusCodes.Status302Found)]
+	[ProducesResponseType(typeof(UrlModel), StatusCodes.Status200OK)]
 	[ProducesResponseType(typeof(RestApiError), StatusCodes.Status404NotFound)]
 	[ProducesResponseType(typeof(RestApiError), StatusCodes.Status500InternalServerError)]
 	public async Task<ActionResult<string>> GetFullUrl(string shortUrl)
@@ -45,7 +45,7 @@ public class UrlController : ControllerBase
 
 		_logger.LogInformation("Объект успешно получен: {@url}", url);
 
-		return Redirect(url.FullAddress);
+		return Ok(url.FullAddress);
 	}
 
 	/// <summary>

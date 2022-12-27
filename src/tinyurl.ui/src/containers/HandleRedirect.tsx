@@ -15,7 +15,7 @@ function HandleRedirectContainer() {
         async function getData() {
             return axios
                 .get(`${SERVER_ENDPOINTS}?shortUrl=${shortAddress}`)
-                .then((res) => setDestination(res.data.destination))
+                .then((res) => setDestination(res.data))
                 .catch((error) => {
                     setError(error.message);
                 });
