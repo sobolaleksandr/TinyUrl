@@ -7,13 +7,22 @@ function TinyUrlForm() {
     const [fullUrl, setDestination] = useState();
     const [shortUrl, setShortUrl] = useState<{
         shortAddress: string;
+        qrCodePath: string;
     } | null>(null);
 
-    const [qrCodePath, setImagePath] = useState();
+    const [error, setError] = useState<{
+        message: string;
+    } | null>(null);
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setShortUrl(null);
+        setError(null);
+        if (!fullUrl) {
+            setError({ message: 'Заполните адрес' })
+            return;
+        }
+        
         const result = await axios
             .post(`${SERVER_ENDPOINTS}`, null, {
                 params:
@@ -21,10 +30,17 @@ function TinyUrlForm() {
                     fullUrl
                 }
             })
-            .then((resp) => resp.data);
+            .then((resp) => resp.data)
+            .catch((error) => {
+                if (error.code === "ERR_NETWORK")
+                    setError({ message: 'Сервер не доступен' })
+                else
+                    setError(error.response.data);
+
+                console.log(error);
+            });
 
         setShortUrl(result);
-        setImagePath(result.qrCodePath);
         console.log(result);
     }
 
@@ -44,9 +60,10 @@ function TinyUrlForm() {
                     <a href={`/${shortUrl?.shortAddress}`}>
                         {window.location.origin}/{shortUrl?.shortAddress}
                     </a>
-                    <img src={process.env.PUBLIC_URL + qrCodePath} alt="QR-код"/>
+                    <img src={process.env.PUBLIC_URL + shortUrl?.qrCodePath} alt="QR-код" />
                 </div>
             )}
+            <p>{JSON.stringify(error?.message)}</p>
         </Box>
     );
 }
